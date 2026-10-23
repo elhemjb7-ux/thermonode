@@ -1,6 +1,8 @@
 #include "unity.h"
 #include "node.h"
 #include "hal_double.h"
+#include "hal.h"
+#include <stdio.h>
 
 #define ADC_25  931u
 #define ADC_70  1490u
@@ -102,6 +104,49 @@ void test_EF04_no_second_alert_frame_while_alert(void)
     TEST_ASSERT_EQUAL_INT(1, hal_double_send_calls());
 }
 
+void test_EF04_alert_cleared_below_hysteresis(void)
+{
+    feed(ADC_25, 5);
+    feed(ADC_70, 6);
+    feed(1291u, 5);
+
+    TEST_ASSERT_EQUAL(STATE_NORMAL, node_state());
+    TEST_ASSERT_EQUAL_INT(2, hal_double_send_calls());
+}
+
+void test_EF04_alert_kept_at_hysteresis_bound(void)
+{
+    feed(ADC_25, 5);
+    feed(ADC_70, 6);
+    feed(1304u, 5);
+
+    TEST_ASSERT_EQUAL(STATE_ALERT, node_state());
+    TEST_ASSERT_EQUAL_INT(1, hal_double_send_calls());
+}
+
+void test_ENF01_alert_frame_within_2s_of_third_filtered_sample(void)
+{
+    feed(ADC_25, 5);
+    feed(ADC_70, 5);
+
+    hal_double_push_adc(ADC_70);
+    hal_double_advance_ms(1000u);
+    const uint32_t t3 = hal_clock_ms();
+printf("AVANT : t3=%lu, envois=%d, dernier_envoi=%lu\n",
+       (unsigned long)t3,
+       hal_double_send_calls(),
+       (unsigned long)hal_double_last_send_ms());
+    node_step();
+printf("APRES : envois=%d, dernier_envoi=%lu\n",
+       hal_double_send_calls(),
+       (unsigned long)hal_double_last_send_ms());
+    TEST_ASSERT_EQUAL_INT(1, hal_double_send_calls());
+    TEST_ASSERT_TRUE(hal_double_last_send_ms() >= t3);
+    TEST_ASSERT_LESS_THAN_UINT32(
+        2000u, hal_double_last_send_ms() - t3
+    );
+}
+
 int main(void)
 {
     UNITY_BEGIN();
@@ -111,5 +156,8 @@ int main(void)
     RUN_TEST(test_EF05_recovers_to_normal_after_5_valid_samples);
     RUN_TEST(test_EF04_no_alert_before_three_filtered_above);
     RUN_TEST(test_EF04_no_second_alert_frame_while_alert);
+    RUN_TEST(test_EF04_alert_cleared_below_hysteresis);
+    RUN_TEST(test_EF04_alert_kept_at_hysteresis_bound);
+    RUN_TEST(test_ENF01_alert_frame_within_2s_of_third_filtered_sample);
     return UNITY_END();
 }
