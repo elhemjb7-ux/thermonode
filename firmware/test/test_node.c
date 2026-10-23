@@ -81,9 +81,25 @@ void test_EF05_recovers_to_normal_after_5_valid_samples(void)
 
     feed(935u, 1);
     TEST_ASSERT_EQUAL(STATE_NORMAL, node_state());
-
-    /* Une trame de defaut, puis une trame de reprise. */
     TEST_ASSERT_EQUAL_INT(2, hal_double_send_calls());
+}
+
+void test_EF04_no_alert_before_three_filtered_above(void)
+{
+    feed(ADC_25, 5);
+    feed(ADC_70, 5);
+
+    TEST_ASSERT_EQUAL(STATE_NORMAL, node_state());
+    TEST_ASSERT_EQUAL_INT(0, hal_double_send_calls());
+}
+
+void test_EF04_no_second_alert_frame_while_alert(void)
+{
+    feed(ADC_25, 5);
+    feed(ADC_70, 10);
+
+    TEST_ASSERT_EQUAL(STATE_ALERT, node_state());
+    TEST_ASSERT_EQUAL_INT(1, hal_double_send_calls());
 }
 
 int main(void)
@@ -93,5 +109,7 @@ int main(void)
     RUN_TEST(test_EF05_out_of_range_enters_fault);
     RUN_TEST(test_EF05_frozen_sensor_enters_fault);
     RUN_TEST(test_EF05_recovers_to_normal_after_5_valid_samples);
+    RUN_TEST(test_EF04_no_alert_before_three_filtered_above);
+    RUN_TEST(test_EF04_no_second_alert_frame_while_alert);
     return UNITY_END();
 }
