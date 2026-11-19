@@ -50,6 +50,12 @@ Le rapport de référence gcovr donne **89,7 % des lignes** et **82,6 % des bran
 La qualité du firmware reste donc à vérifier avec ses rapports et ses tests,
 en complément de la gate SonarQube.
 
+**Vérification locale après intégration** — 50 tests firmware et 1 test
+Python réussis sur `verification/tp4`. gcovr mesure 89,0 % des lignes
+(267/300) et 78,5 % des branches (124/158), contre 89,7 % et 82,6 %
+sur la version de référence. pytest-cov affiche 30 % sur les fichiers
+de son rapport Python. Le verdict SonarQube sur `main` reste à relever.
+
 ## 4. Gestion de configuration — Q4 et Q5
 
 | PR | Objet | État |
