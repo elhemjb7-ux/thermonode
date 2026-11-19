@@ -14,6 +14,7 @@ class FrameError(ValueError):
 
 @dataclass(frozen=True)
 class Frame:
+    """Represent a decoded ThermoNode frame."""
     node_id: str
     seq: int
     t: int
