@@ -1,6 +1,5 @@
 #include "filter.h"
 
-static int32_t window[FILTER_WINDOW];
 static size_t  flt_count;      /* nombre de valeurs valides présentes (<= FILTER_WINDOW) */
 static size_t  flt_head;       /* prochain index d'écriture */
 
@@ -14,6 +13,7 @@ size_t filter_count(void) { return flt_count; }
 
 int32_t filter_push(int32_t centi, bool valid)
 {
+    static int32_t window[FILTER_WINDOW];
     int32_t sum = 0;
     size_t i;
     if (valid) {
