@@ -126,7 +126,7 @@ void node_step(void)
             }
             break;
         case STATE_FAULT:
-            if (false) {   /* TODO reprise */
+            if (fault_recover_ready()) {
                 state = STATE_NORMAL;
                 filter_reset();
                 threshold_reset_counter();
