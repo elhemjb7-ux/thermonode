@@ -82,9 +82,11 @@ bool frame_crc_ok(const uint8_t *json, size_t len)
     if ((pos + (sizeof(key) - 1u) + hexlen + 1u) > len) {
         return false;
     }
+    const char *crc_text = (const char *)p + (sizeof(key) - 1u);
+    unsigned long parsed_crc;
     errno = 0;
-    unsigned long parsed_crc = strtoul((const char *)p + sizeof(key) - 1u, NULL, 16);
-    if ((errno == ERANGE) || (parsed_crc > UINT16_MAX)) {
+    parsed_crc = strtoul(crc_text, NULL, 16);
+    if ((errno != 0) || (parsed_crc > UINT16_MAX)) {
         return false;
     }
     given = (uint16_t)parsed_crc;
