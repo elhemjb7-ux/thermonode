@@ -185,8 +185,8 @@ void node_poll_commands(void)
             send_ack(cmd, "nack", "range");
         }
     } else if (strcmp(cmd, "set_period") == 0) {
-        if ((value >= (int32_t)(NODE_PERIOD_MIN_MS / 1000u)) &&
-            (value <= (int32_t)(NODE_PERIOD_MAX_MS / 1000u))) {
+        if ((value >= ((int32_t)NODE_PERIOD_MIN_MS / 1000)) &&
+            (value <= ((int32_t)NODE_PERIOD_MAX_MS / 1000))) {
             acq_period_ms = (uint32_t)value * 1000u;
             send_ack(cmd, "ok", "");
         } else {
