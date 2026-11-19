@@ -1,3 +1,4 @@
+#include <errno.h>
 #include "frame.h"
 #include <stdio.h>
 #include <string.h>
@@ -98,7 +99,16 @@ bool json_get_int(const uint8_t *json, size_t len, const char *key, int32_t *val
     if ((*p != '-') && ((*p < '0') || (*p > '9'))) {
         return false;
     }
-    *value = (int32_t)strtol(p, NULL, 10);
+    char *end;
+    long parsed;
+
+    errno = 0;
+    parsed = strtol(p, &end, 10);
+    if ((end == p) || (errno == ERANGE) ||
+        (parsed < INT32_MIN) || (parsed > INT32_MAX)) {
+        return false;
+    }
+    *value = (int32_t)parsed;
     return true;
 }
 
