@@ -1,5 +1,7 @@
 #include "convert.h"
 
+/* Appelée depuis test/test_convert.c, hors du périmètre src/. */
+// cppcheck-suppress misra-c2012-8.7
 bool range_check(int32_t centi)
 {
     return (centi >= TN_TEMP_MIN_CENTI) && (centi <= TN_TEMP_MAX_CENTI);

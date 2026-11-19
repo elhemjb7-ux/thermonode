@@ -15,6 +15,8 @@ static uint32_t     data_period_ms = NODE_DATA_PERIOD_MS;
 static uint32_t     acq_period_ms  = NODE_PERIOD_MIN_MS;
 static uint32_t     last_data_ms;
 static int32_t      last_filtered;
+/* Initialisation d’un tableau char. */
+// cppcheck-suppress misra-c2012-7.4
 static char         node_id[TN_ID_LEN] = "TN01";
 
 void node_set_id(const char *id)
