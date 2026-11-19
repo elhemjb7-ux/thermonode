@@ -2,3 +2,17 @@
 unusedFunction
 missingIncludeSystem
 *:test/*
+
+# DEV-004 - Retours anticipés dans les gardes du firmware
+misra-c2012-15.5:src/*
+
+# DEV-005 - Calcul des offsets dans le module de trames
+misra-c2012-18.4:src/frame.c
+
+# DEV-002 - Usage documenté de stdio.h
+misra-c2012-21.6:src/frame.c
+misra-c2012-21.6:src/node.c
+
+# DEV-006 - Code de simulation hôte dans les blocs TN_SIM
+misra-c2012-21.1:src/main.c
+misra-c2012-21.10:src/main.c
