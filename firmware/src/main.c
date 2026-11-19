@@ -1,5 +1,7 @@
 /* main.c — boucle principale (cible : hal_stm32.c ; simulateur hôte : hal_sim.c avec -DTN_SIM) */
 #ifdef TN_SIM
+/* Requise par les en-têtes système pour nanosleep (DEV-006). */
+// cppcheck-suppress misra-c2012-2.5
 #define _POSIX_C_SOURCE 200809L
 #include <time.h>
 #endif
