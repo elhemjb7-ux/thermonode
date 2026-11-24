@@ -8,13 +8,17 @@ from .handler import Handler
 
 def start_health_server(handler: Handler, port: int = 8000) -> HTTPServer:
     class H(BaseHTTPRequestHandler):
-        def do_GET(self):
+        """Serve the gateway health endpoint."""
+        # http.server dispatches GET requests to do_GET.
+        def do_GET(self):  # pylint: disable=invalid-name
             if self.path == "/health":
                 body = b"ok"
             elif self.path == "/metrics":
                 body = "".join(f"gateway_{k} {v}\n" for k, v in sorted(handler.metrics.items())).encode()
             else:
-                self.send_response(404); self.end_headers(); return
+                self.send_response(404)
+                self.end_headers()
+                return
             self.send_response(200)
             self.send_header("Content-Type", "text/plain; charset=utf-8")
             self.end_headers()
