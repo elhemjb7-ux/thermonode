@@ -1,7 +1,6 @@
 #include "fault.h"
 #include "convert.h"
 
-static uint16_t last_raw;
 static bool     have_last;
 static uint32_t frozen_count;   /* mesures brutes identiques consécutives (1 = première) */
 static uint32_t valid_run;      /* mesures valides consécutives, pour la reprise */
@@ -17,6 +16,7 @@ uint32_t fault_frozen_count(void) { return frozen_count; }
 
 bool fault_detect(int32_t centi, uint16_t raw, bool valid)
 {
+    static uint16_t last_raw;
     bool fault;
     if (have_last && (raw == last_raw)) {
         frozen_count++;
